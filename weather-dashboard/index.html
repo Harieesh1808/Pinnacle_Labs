@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Weather Dashboard</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div class="container">
+        <!-- Search Bar -->
+        <div class="search-section">
+            <div class="search-wrapper">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <input type="text" id="cityInput" placeholder="Search for a city..." autocomplete="off">
+                <!-- Dropdown suggestions -->
+                <ul class="suggestions-list" id="suggestionsList"></ul>
+            </div>
+            <button class="btn" id="locationBtn" title="Current Location">
+                <i class="fa-solid fa-location-crosshairs"></i>
+            </button>
+            <button class="btn unit-toggle" id="unitToggle">°C</button>
+        </div>
+
+        <!-- States -->
+        <div class="loading" id="loadingState">
+            <div class="spinner"></div>
+            <p>Fetching weather data...</p>
+        </div>
+        
+        <div class="error" id="errorState">
+            <i class="fa-solid fa-triangle-exclamation" style="font-size: 2rem; margin-bottom: 10px; color: #ff6b6b;"></i>
+            <p id="errorMsg">City not found. Please try again.</p>
+        </div>
+
+        <!-- Weather Content -->
+        <div class="weather-info" id="weatherInfo">
+            <h2 class="location" id="cityName">--</h2>
+            <p class="date" id="currentDate">--</p>
+            
+            <div class="temp-container">
+                <img id="weatherIcon" class="weather-icon-large" src="" alt="Weather Icon">
+                <div class="temp"><span id="currentTemp">--</span><span id="tempUnit">°C</span></div>
+            </div>
+            
+            <p class="description" id="weatherDesc">--</p>
+
+            <div class="details-grid">
+                <div class="detail-card">
+                    <i class="fa-solid fa-temperature-half"></i>
+                    <div class="detail-label">Feels Like</div>
+                    <div class="detail-value"><span id="feelsLike">--</span>°</div>
+                </div>
+                <div class="detail-card">
+                    <i class="fa-solid fa-droplet"></i>
+                    <div class="detail-label">Humidity</div>
+                    <div class="detail-value"><span id="humidity">--</span>%</div>
+                </div>
+                <div class="detail-card">
+                    <i class="fa-solid fa-wind"></i>
+                    <div class="detail-label">Wind Speed</div>
+                    <div class="detail-value"><span id="windSpeed">--</span> <span id="speedUnit">m/s</span></div>
+                </div>
+                <div class="detail-card">
+                    <i class="fa-solid fa-gauge"></i>
+                    <div class="detail-label">Pressure</div>
+                    <div class="detail-value"><span id="pressure">--</span> hPa</div>
+                </div>
+            </div>
+
+            <h3 class="forecast-title">5-Day Forecast</h3>
+            <div class="forecast-container" id="forecastContainer">
+                <!-- Forecast items injected via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Scripts -->
+    <script src="app.js"></script>
+</body>
+</html>
