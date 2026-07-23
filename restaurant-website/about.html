@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gourmet Restaurant | About Us</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&display=swap" rel="stylesheet">
+    <style>
+        .about-content {
+            display: flex;
+            gap: 4rem;
+            align-items: center;
+        }
+        .about-text { flex: 1; }
+        .about-text h2 { color: var(--primary-color); margin-bottom: 1rem; font-size: 2rem; }
+        .about-text p { margin-bottom: 1rem; color: #ccc; font-size: 1.1rem; }
+        .about-image { flex: 1; border-radius: 8px; overflow: hidden; }
+        .about-image img { width: 100%; height: auto; display: block; }
+        
+        @media (max-width: 768px) {
+            .about-content { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="logo">🍽️ <span>Gourmet</span></div>
+        <ul class="nav-links">
+            <li><a href="main.html">Home</a></li>
+            <li><a href="menu.html">Menu</a></li>
+            <li><a href="reservation.html">Reservations</a></li>
+            <li><a href="events.html">Events</a></li>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </ul>
+    </nav>
+
+    <div class="page-header">
+        <h1>Our Story</h1>
+    </div>
+
+    <div class="container about-content">
+        <div class="about-text">
+            <h2>Passion for Culinary Excellence</h2>
+            <p>Founded in 2015, Gourmet began as a small family dream to bring authentic, high-quality dining to our community. We source only the freshest local ingredients and blend them with classic techniques to create unforgettable dishes.</p>
+            <p>Our philosophy is simple: great food, warm atmosphere, and exceptional service. Every meal is a celebration, and we invite you to be part of our family.</p>
+        </div>
+        <div class="about-image">
+            <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Restaurant Interior">
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
+</body>
+</html>

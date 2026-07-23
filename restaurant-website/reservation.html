@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ember & Savor — Reservations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,400&family=Work+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #14181C;
+    --ink-soft: #1D2227;
+    --parchment: #EDE6D6;
+    --parchment-dim: #DCD3BE;
+    --brass: #C9A227;
+    --brass-soft: #A8862A;
+    --ember: #B5482F;
+    --olive: #5C6B4A;
+    --smoke: #8A9098;
+    --line: rgba(237, 230, 214, 0.14);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--ink);
+    color: var(--parchment);
+    font-family: 'Work Sans', sans-serif;
+    font-weight: 300;
+    line-height: 1.6;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    color-scheme: dark;
+  }
+  a { color: inherit; text-decoration: none; }
+  .display { font-family: 'Fraunces', serif; }
+  .mono { font-family: 'IBM Plex Mono', monospace; }
+
+  /* NAV */
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 28px 6vw;
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-mark {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 1.05rem;
+    letter-spacing: 0.02em;
+  }
+  .nav-links {
+    display: flex;
+    gap: 40px;
+    font-size: 0.78rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  .nav-links a { opacity: 0.75; transition: opacity 0.25s ease; }
+  .nav-links a:hover { opacity: 1; }
+
+  @media (max-width: 640px) {
+    .nav-links { gap: 20px; font-size: 0.65rem; }
+  }
+
+  /* MAIN CONTENT */
+  main {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 6vw;
+  }
+
+  .reservation-container {
+    width: 100%;
+    max-width: 500px;
+    background: var(--ink-soft);
+    border: 1px solid var(--line);
+    padding: 40px;
+    border-radius: 3px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+  }
+
+  .res-header {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  .res-header h1 {
+    font-size: 2rem;
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: var(--parchment);
+  }
+  .res-header p {
+    color: var(--smoke);
+    font-size: 0.9rem;
+  }
+
+  .form-group {
+    margin-bottom: 24px;
+  }
+  .form-group label {
+    display: block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--brass);
+    margin-bottom: 8px;
+  }
+  .form-group input, .form-group select {
+    width: 100%;
+    padding: 14px;
+    background: var(--ink);
+    border: 1px solid var(--line);
+    color: var(--parchment);
+    font-family: 'Work Sans', sans-serif;
+    font-size: 0.9rem;
+    border-radius: 2px;
+    transition: border-color 0.2s ease;
+    color-scheme: dark;
+  }
+  .form-group input:focus, .form-group select:focus {
+    outline: none;
+    border-color: var(--brass);
+  }
+
+  .btn {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    border: 1px solid var(--brass);
+    border-radius: 2px;
+    font-size: 0.78rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    background: var(--brass);
+    color: var(--ink);
+    transition: background 0.3s ease, color 0.3s ease;
+    cursor: pointer;
+    font-family: 'Work Sans', sans-serif;
+  }
+  .btn:hover { background: transparent; color: var(--brass); }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--parchment);
+    border: 1px solid var(--line);
+  }
+  .btn-secondary:hover { border-color: var(--parchment); color: var(--parchment); }
+
+  /* STEPS */
+  .step { display: none; }
+  .step.active { display: block; animation: fadeIn 0.4s ease forwards; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* SUGGESTIONS BOX */
+  .suggestions-box {
+    background: rgba(181, 72, 47, 0.1);
+    border-left: 2px solid var(--ember);
+    padding: 16px;
+    margin-bottom: 24px;
+    display: none;
+  }
+  .suggestions-box p {
+    font-size: 0.85rem;
+    margin-bottom: 12px;
+  }
+  .suggest-times {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .suggest-btn {
+    padding: 8px 16px;
+    background: var(--ink);
+    border: 1px solid var(--line);
+    color: var(--parchment);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .suggest-btn:hover {
+    border-color: var(--brass);
+    color: var(--brass);
+  }
+
+  /* Success State */
+  .success-msg {
+    text-align: center;
+    display: none;
+  }
+  .success-msg.active {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .success-msg h2 {
+    font-size: 2rem;
+    color: var(--brass);
+    margin-bottom: 16px;
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-mark"><a href="main.html">Ember & Savor</a></div>
+  <div class="nav-links">
+    <a href="main.html#menu">Menu</a>
+    <a href="main.html#events">Events</a>
+    <a href="reservation.html">Reservations</a>
+  </div>
+</nav>
+
+<main>
+  <div class="reservation-container">
+    
+    <!-- Step 1: Check Availability -->
+    <div id="step-1" class="step active">
+      <div class="res-header">
+        <h1 class="display">Book a Table</h1>
+        <p>Avail your reservation. Select your date and time.</p>
+      </div>
+
+      <div class="suggestions-box" id="suggestions-box">
+        <p id="suggestion-text">Sorry, the requested time is fully booked. How about these alternatives?</p>
+        <div class="suggest-times" id="suggest-times"></div>
+      </div>
+
+      <form id="check-form">
+        <div class="form-group">
+          <label for="res-date">Date</label>
+          <input type="date" id="res-date" required>
+        </div>
+        <div class="form-group">
+          <label for="res-time">Time</label>
+          <input type="time" id="res-time" required>
+        </div>
+        <div class="form-group">
+          <label for="res-guests">Number of Guests</label>
+          <select id="res-guests" required>
+            <option value="1">1 Guest</option>
+            <option value="2" selected>2 Guests</option>
+            <option value="3">3 Guests</option>
+            <option value="4">4 Guests</option>
+            <option value="5">5 Guests</option>
+            <option value="6">6 Guests</option>
+            <option value="7+">7+ Guests (Call us)</option>
+          </select>
+        </div>
+        <button type="submit" class="btn">Check Availability</button>
+      </form>
+    </div>
+
+    <!-- Step 2: User Details -->
+    <div id="step-2" class="step">
+      <div class="res-header">
+        <h1 class="display">Almost there</h1>
+        <p>We have a table available on <br><strong id="confirm-datetime" style="color:var(--brass); font-weight: 500;"></strong>.</p>
+      </div>
+      <form id="details-form">
+        <div class="form-group">
+          <label for="full-name">Full Name</label>
+          <input type="text" id="full-name" required placeholder="Jane Doe">
+        </div>
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" required placeholder="jane@example.com">
+        </div>
+        <div class="form-group">
+          <label for="phone">Phone Number</label>
+          <input type="tel" id="phone" required placeholder="(555) 123-4567">
+        </div>
+        <div style="display:flex; gap:12px; margin-top:30px; align-items: stretch;">
+          <button type="button" class="btn btn-secondary" id="btn-back" style="flex:1">Back</button>
+          <button type="submit" class="btn" style="flex:2">Confirm Reservation</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Step 3: Success -->
+    <div id="step-3" class="step success-msg">
+      <h2 class="display">Table Confirmed.</h2>
+      <p style="color:var(--smoke); margin-bottom:30px;">Your reservation has been secured. Thank you for choosing Ember & Savor!</p>
+      <a href="main.html" class="btn btn-secondary">Return Home</a>
+    </div>
+
+  </div>
+</main>
+
+<script>
+  // Elements
+  const step1 = document.getElementById('step-1');
+  const step2 = document.getElementById('step-2');
+  const step3 = document.getElementById('step-3');
+  const checkForm = document.getElementById('check-form');
+  const detailsForm = document.getElementById('details-form');
+  const suggestionsBox = document.getElementById('suggestions-box');
+  const suggestionText = document.getElementById('suggestion-text');
+  const suggestTimes = document.getElementById('suggest-times');
+  const confirmDatetime = document.getElementById('confirm-datetime');
+  const btnBack = document.getElementById('btn-back');
+
+  let selectedDate = '';
+  let selectedTime = '';
+
+  // Default to today
+  document.getElementById('res-date').valueAsDate = new Date();
+  
+  // Format helpers
+  const formatTime = (timeStr) => {
+    const [h, m] = timeStr.split(':');
+    let hour = parseInt(h);
+    const ampm = hour >= 12 ? 'PM' : 'AM';
+    hour = hour % 12 || 12;
+    return `${hour}:${m} ${ampm}`;
+  };
+
+  const formatDate = (dateStr) => {
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
+  }
+
+  const proceedToStep2 = (date, time) => {
+    selectedDate = date;
+    selectedTime = time;
+    confirmDatetime.innerHTML = `${formatDate(date)}<br>at ${formatTime(time)}`;
+    step1.classList.remove('active');
+    step2.classList.add('active');
+    suggestionsBox.style.display = 'none';
+  };
+
+  // Logic: Check Availability
+  checkForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const date = document.getElementById('res-date').value;
+    const time = document.getElementById('res-time').value;
+
+    // MOCK LOGIC: If time is between 19:00 and 19:59 (7 PM hour), say it's full and suggest 18:30 and 20:00.
+    // (A demonstration of the availability logic).
+    const hour = parseInt(time.split(':')[0]);
+    
+    if (hour === 19) {
+      // Show suggestions
+      suggestionsBox.style.display = 'block';
+      suggestionText.textContent = `Sorry, ${formatTime(time)} is fully booked. How about these alternatives?`;
+      
+      suggestTimes.innerHTML = `
+        <button type="button" class="suggest-btn" data-time="18:30">6:30 PM</button>
+        <button type="button" class="suggest-btn" data-time="20:00">8:00 PM</button>
+        <button type="button" class="suggest-btn" data-time="20:30">8:30 PM</button>
+      `;
+
+      // Add listeners to suggestion buttons
+      document.querySelectorAll('.suggest-btn').forEach(btn => {
+        btn.addEventListener('click', (ev) => {
+          proceedToStep2(date, ev.target.getAttribute('data-time'));
+        });
+      });
+    } else {
+      // Available
+      proceedToStep2(date, time);
+    }
+  });
+
+  // Logic: Back Button
+  btnBack.addEventListener('click', () => {
+    step2.classList.remove('active');
+    step1.classList.add('active');
+  });
+
+  // Logic: Confirm Reservation
+  detailsForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    step2.classList.remove('active');
+    step3.classList.add('active');
+  });
+</script>
+
+</body>
+</html>
